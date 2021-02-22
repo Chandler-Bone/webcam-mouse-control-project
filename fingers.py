@@ -37,10 +37,9 @@ def count(hand_contour, res):
                 
 
             return finger_count, res
-
-        else:
-            return 0, res
                 
 
     except:
-        return 0, res
+        pass
+
+    return 0, res
