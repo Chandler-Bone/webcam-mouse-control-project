@@ -1,15 +1,22 @@
 import numpy as np
 import cv2 as cv
+import pyautogui
 import queue
 import fingers
 
 #change the ip to 0 if you are using a webcame connected to pc
 cap = cv.VideoCapture("https://192.168.0.11:8080/video")
-IMAGE_DIM = 500, 500
+MONITOR_DIM = 1920, 1080
+IMAGE_DIM = 852, 480 
+IMAGE_BOUND_X = (int(IMAGE_DIM[0]*(1/8)), int(IMAGE_DIM[0]*(7/8)))
+IMAGE_BOUND_Y = (0, int(IMAGE_DIM[1]*(6/8)))
+IMAGE_DILATION = (MONITOR_DIM[0]/(IMAGE_DIM[0]*(7/8)), MONITOR_DIM[1]/(IMAGE_DIM[1]*(6/8)))
+
+print(IMAGE_DILATION)
 
 #rgb skin values, colors outside this range will be removed
-lower_skin = np.array([0,0,0])
-upper_skin = np.array([190,125,190])
+lower_skin = np.array([83,92,0])
+upper_skin = np.array([145,225,230])
 
 #variables used for counting the average fingers
 finger_queue = []
@@ -68,7 +75,17 @@ while(True):
         cv.drawContours(res, [max_contour],-1, (0, 255, 0), 3)
 
         #gets the current count of fingers and updates res with graphics
-        finger_count, res = fingers.count(max_contour, res)
+        finger_count, res, cursor_pos = fingers.count(max_contour, res)
+
+        cv.rectangle(res, (IMAGE_BOUND_X[0], IMAGE_BOUND_Y[0]), (IMAGE_BOUND_X[1], IMAGE_BOUND_Y[1]), (255, 255, 0), 1)
+        if(cursor_pos[0] < IMAGE_DIM[0]):
+            try:
+                pyautogui.moveTo(((cursor_pos[0]-IMAGE_DIM[0]*(1/8))*IMAGE_DILATION[0], cursor_pos[1]*IMAGE_DILATION[1]), _pause = False)
+                #todo fix out of bounds so that it doesnt make moust get stuck
+            except:
+                pass
+            
+
 
         #averages the number of fingers on screen for more reliable count and creates graphics
         finger_queue.append(finger_count)
@@ -78,10 +95,10 @@ while(True):
             for i in range(len(finger_queue)):
                 finger_count_avg += finger_queue.pop(0)
 
-            finger_count_avg = finger_count_avg / finger_queue_len + 1
+            finger_count_avg = finger_count_avg / finger_queue_len 
 
         if(finger_count_avg > 1):
-            cv.putText(res, "Fingers: " + str(round(finger_count_avg)), (50,50), cv.FONT_HERSHEY_SIMPLEX, .5, (0,200,200), 1, cv.LINE_AA)
+            cv.putText(res, "Finger Openings: " + str(round(finger_count_avg)), (50,50), cv.FONT_HERSHEY_SIMPLEX, .5, (0,200,200), 1, cv.LINE_AA)
         else:
              cv.putText(res, "No Open Fingers", (50,50), cv.FONT_HERSHEY_SIMPLEX, .5, (0,200,200), 1, cv.LINE_AA)
 
