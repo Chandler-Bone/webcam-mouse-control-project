@@ -230,10 +230,10 @@ class CalibrateDetection:
                 colors[2] = hsv[y,x,2]#Value
                 
                 #making sure guesstimated hue isnt going to be out of bounds
-                if colors[0] > 250:
-                    colors[0] = 250
-                elif colors[0] < 5:
-                    colors[0] = 5
+                if colors[0] > 240:
+                    colors[0] = 240
+                elif colors[0] < 15:
+                    colors[0] = 15
 
                 self.lower_skin = np.array([colors[0]-15, 20, 80])
                 self.upper_skin = np.array([colors[0]+15, 255, 230])
