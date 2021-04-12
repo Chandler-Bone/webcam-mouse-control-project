@@ -2,44 +2,44 @@ import numpy as np
 import cv2 as cv
 import pyautogui
 import queue
+import sys
 
 class HandDetection:
 
-    monitor_dimensions = 1920, 1080
-    use_ip_webcam = 0
-    webcam_ip = ""
-    resolution_width = 1920
-    resolution_height = 1080
-    lower_skin = np.array([0,0,0])
-    upper_skin = np.array([255,255,255])
-    is_debug = 0
-
+    #width and height of control window
     IMAGE_DIMENSIONS = 852, 480 
-    IMAGE_BOUND_X = (int(IMAGE_DIMENSIONS[0]*(1/8)), int(IMAGE_DIMENSIONS[0]*(7/8)))
-    IMAGE_BOUND_Y = (0, int(IMAGE_DIMENSIONS[1]*(6/8)))
-    IMAGE_DILATION = (monitor_dimensions[0]/(IMAGE_DIMENSIONS[0]*(7/8)), monitor_dimensions[1]/(IMAGE_DIMENSIONS[1]*(6/8)))
 
-    
+    def __init__(self, use_ip_webcam, webcam_ip, resolution_width, resolution_height, lower_hue, lower_saturation, lower_value, upper_hue, upper_saturation, upper_value, is_debug):
 
-    def __init__(self, use_ip_webcam, webcam_ip, resolution_width, resolution_height, lower_red, lower_green, lower_blue, upper_red, upper_green, upper_blue, is_debug):
-
-        self.use_ip_webcam = use_ip_webcam
-        #change the webcam_ip to 0 if you are using a webcame connected to pc
         self.webcam_ip = webcam_ip
+        if(use_ip_webcam == 1):
+            self.cap = cv.VideoCapture(self.webcam_ip)
+        else:
+            self.cap = cv.VideoCapture(0)
 
         self.resolution_width = resolution_width
         self.resolution_height = resolution_height
 
-        #rgb skin values, colors outside this range will be removed
-        self.lower_skin = np.array([lower_red, lower_green, lower_blue])
-        self.upper_skin = np.array([upper_red, upper_green, upper_blue])
+        #hsv skin values, colors outside this range will be removed
+        self.lower_skin = np.array([lower_hue, lower_saturation, lower_value])
+        self.upper_skin = np.array([upper_hue, upper_saturation, upper_value])
 
         self.is_debug = is_debug
 
+        #got to round since we cant have decimals when writing lines to the screen
+        self.IMAGE_BOUND_X = (int(self.IMAGE_DIMENSIONS[0]*(1/8)), int(self.IMAGE_DIMENSIONS[0]*(7/8)))
+        self.IMAGE_BOUND_Y = (int(self.IMAGE_DIMENSIONS[1]*(1/8)), int(self.IMAGE_DIMENSIONS[1]*(3/4)))
+        self.IMAGE_DISPLACEMENT_X = int(self.IMAGE_DIMENSIONS[0]*(1/8))
+        self.IMAGE_DISPLACEMENT_Y = int(self.IMAGE_DIMENSIONS[1]*(1/8))
+        self.IMAGE_DILATION = ((self.resolution_width/self.IMAGE_DIMENSIONS[0])/(6/8)), ((self.resolution_height/self.IMAGE_DIMENSIONS[1])/(5/8))
+        print(self.IMAGE_DILATION)
 
-    def count_fingers(hand_contour, res):
+    def count_fingers(self, hand_contour, res):
+        #this does majortiy of the math regarding cursor placement and finger count
 
-        cursor_pos = (2000, 2000)
+        #sets default cursor position to bottom left of screen
+        cursor_pos_draw = (0, self.resolution_height)
+        cursor_pos_real = (0, self.resolution_height)
 
         try:
             #creates contour around the hand, between each finger is a defect that we can get measurements of
@@ -57,9 +57,21 @@ class HandDetection:
                     end = tuple(hand_contour[e][0])
                     far = tuple(hand_contour[f][0])
 
-                    if(cursor_pos[1] > start[1]):
-                        cursor_pos = (start[0], start[1])
-                        
+                    #we look for the highest point on the hand and make that the picked cursor
+                    if(cursor_pos_draw[1] > start[1]):
+                        cursor_pos_draw = (start[0], start[1])
+                        cursor_pos_real = (round((start[0]-self.IMAGE_DISPLACEMENT_X)*self.IMAGE_DILATION[0]), round((start[1]-self.IMAGE_DISPLACEMENT_Y)*self.IMAGE_DILATION[1]))
+
+                        #if cursor goes out of bounds we correct it.
+                        if(cursor_pos_real[0] < 0):
+                            cursor_pos_real = (0, cursor_pos_real[1])
+                        if(cursor_pos_real[1] < 0):
+                            cursor_pos_real = (cursor_pos_real[0], 0)
+                        if(cursor_pos_real[0] > self.resolution_width):
+                            cursor_pos_real = (self.resolution_width, cursor_pos_real[1])
+                        if(cursor_pos_real[1] > self.resolution_height):
+                            cursor_pos_real = (cursor_pos_real[0], self.resolution_height)
+                        print(cursor_pos_real)
 
                     #minimize the amount of math we do
                     side_a = np.sqrt((start[0]-end[0])**2 + (start[1]-end[1])**2)
@@ -77,23 +89,22 @@ class HandDetection:
                             finger_count += 1
 
                             cv.circle(res,far,5,[0,0,255],-1)
-                            cv.circle(res,cursor_pos,5,[0,122,255],-1)
+                            cv.circle(res,cursor_pos_draw,5,[0,122,255],-1)
                             #cv.putText(res, str(theta), far, cv.FONT_HERSHEY_SIMPLEX, .5, (255,0,0), 1, cv.LINE_AA)
                             cv.line(res,start,end,[255,255,0],2)
                     
-
-                return finger_count, res, cursor_pos
+                return finger_count, res, cursor_pos_real
                     
 
-        except:
+        except Exception as e: 
+            print(e)
             pass
 
-        return 0, res, cursor_pos
+        return 0, res, cursor_pos_real
 
     def run(self):
 
         cap = cv.VideoCapture(self.webcam_ip)
-        res_window = cv.namedWindow('Debug')
         #variables used for counting the average fingers
         finger_queue = []
         finger_count_avg = 0
@@ -106,13 +117,13 @@ class HandDetection:
             img = cv.flip(img, 1)
             img = cv.blur(img, (5,5))
 
-            #converts image rgb -> hsv and removes colors that are not in range
-            hsv = cv.cvtColor(img, cv.COLOR_RGB2HSV)
+            #converts image bgr -> hsv and removes colors that are not in range
+            hsv = cv.cvtColor(img, cv.COLOR_BGR2HSV)
             mask = cv.inRange(hsv, self.lower_skin, self.upper_skin)
             res = cv.bitwise_and(img, img, mask = mask)
 
-            #converts hsv -> rgb -> grayscale then makes any color thats not black, white
-            res_bw = cv.cvtColor(cv.cvtColor(res, cv.COLOR_HSV2RGB) , cv.COLOR_RGB2GRAY)
+            #converts hsv -> bgr -> grayscale then makes any color thats not black, white
+            res_bw = cv.cvtColor(cv.cvtColor(res, cv.COLOR_HSV2BGR) , cv.COLOR_BGR2GRAY)
             _, res_bw = cv.threshold(res_bw, 1, 255, cv.THRESH_BINARY)
 
             #finds all the contours in the black and white image
@@ -130,14 +141,14 @@ class HandDetection:
                 cv.drawContours(res, [max_contour],-1, (0, 255, 0), 3)
 
                 #gets the current count of fingers and updates res with graphics
-                finger_count, res, cursor_pos = HandDetection.count_fingers(max_contour, res)
+                finger_count, res, cursor_pos = HandDetection.count_fingers(self, max_contour, res)
 
                 cv.rectangle(res, (self.IMAGE_BOUND_X[0], self.IMAGE_BOUND_Y[0]), (self.IMAGE_BOUND_X[1], self.IMAGE_BOUND_Y[1]), (255, 255, 0), 1)
-                if(cursor_pos[0] < self.IMAGE_DIMENSIONS[0]):
+                if(finger_count >= 1):
                     try:
                         if(self.is_debug == 0):
-                            pyautogui.moveTo(((cursor_pos[0]-self.IMAGE_DIMENSIONS[0]*(1/8))*self.IMAGE_DILATION[0], cursor_pos[1]*self.IMAGE_DILATION[1]), _pause = False)
-                        #todo fix out of bounds so that it doesnt make moust get stuck
+                            pyautogui.moveTo((cursor_pos[0], cursor_pos[1]), _pause = False)
+                        #todo fix out of bounds so that it doesnt make mouse get stuck
                     except:
                         pass
                     
@@ -145,7 +156,7 @@ class HandDetection:
 
                 #averages the number of fingers on screen for more reliable count and creates graphics
                 finger_queue.append(finger_count)
-                if(len(finger_queue) >= 10):
+                if(len(finger_queue) >= 5):
                     finger_queue_len = len(finger_queue)
                     finger_count_avg = 0
                     for i in range(len(finger_queue)):
@@ -174,7 +185,3 @@ class HandDetection:
 
         cv.destroyAllWindows()
 
-
-# if __name__ == '__main__':
-#     hand_detection = HandDetection(1,"https://192.168.0.8:8080/video",1920,1080,43,37,88,80,170,226,1)
-#     hand_detection.run()

@@ -5,10 +5,18 @@ import os
 import re
 from configparser import ConfigParser
 from hand_detection import HandDetection
+from calibrate_detection import CalibrateDetection
 
 
 class WebcamguiApp:
     def __init__(self, master=None):
+        
+        self.root = tk.Tk()
+        cur_path = os.path.dirname(os.path.abspath(__file__))
+        self.root.iconbitmap(cur_path + '\\hand_icon.ico')
+        self.root.title("Webcam Hand Control")
+        self.root.resizable(False, False)
+
         #this was UI was built using pygubu and i recommend ignoring this garbage 
         self.frame1 = ttk.Frame(master)
         self.canvas = tk.Canvas(self.frame1)
@@ -71,8 +79,8 @@ class WebcamguiApp:
         self.label7.configure(text='____________')
         self.label7.place(anchor='nw', x='15', y='184')
         self.entry4 = ttk.Entry(self.frame1)
-        self.lower_red = tk.IntVar(value=0)
-        self.entry4.configure(textvariable=self.lower_red)
+        self.lower_hue = tk.IntVar(value=0)
+        self.entry4.configure(textvariable=self.lower_hue)
         self._text_ = '''0'''
         self.entry4.delete('0', 'end')
         self.entry4.insert('0', self._text_)
@@ -81,18 +89,18 @@ class WebcamguiApp:
         self.label8.configure(text='Calibration')
         self.label8.place(anchor='nw', x='15', y='180')
         self.label9 = ttk.Label(self.frame1)
-        self.label9.configure(text='Lower RGB Bounds')
+        self.label9.configure(text='Lower HSV Bounds')
         self.label9.place(anchor='nw', x='20', y='201')
         self.entry5 = ttk.Entry(self.frame1)
-        self.lower_green = tk.IntVar(value=0)
-        self.entry5.configure(textvariable=self.lower_green)
+        self.lower_saturation = tk.IntVar(value=0)
+        self.entry5.configure(textvariable=self.lower_saturation)
         self._text_ = '''0'''
         self.entry5.delete('0', 'end')
         self.entry5.insert('0', self._text_)
         self.entry5.place(anchor='nw', relwidth='.06', x='60', y='220')
         self.entry6 = ttk.Entry(self.frame1)
-        self.lower_blue = tk.IntVar(value=0)
-        self.entry6.configure(textvariable=self.lower_blue)
+        self.lower_value = tk.IntVar(value=0)
+        self.entry6.configure(textvariable=self.lower_value)
         self._text_ = '''0'''
         self.entry6.delete('0', 'end')
         self.entry6.insert('0', self._text_)
@@ -101,25 +109,25 @@ class WebcamguiApp:
         self.label9.configure(text='-')
         self.label9.place(anchor='nw', x='130', y='220')
         self.label10 = ttk.Label(self.frame1)
-        self.label10.configure(text='Upper RGB Bounds')
+        self.label10.configure(text='Upper HSV Bounds')
         self.label10.place(anchor='nw', x='145', y='201')
         self.entry7 = ttk.Entry(self.frame1)
-        self.upper_red = tk.IntVar(value=225)
-        self.entry7.configure(textvariable=self.upper_red)
+        self.upper_hue = tk.IntVar(value=225)
+        self.entry7.configure(textvariable=self.upper_hue)
         self._text_ = '''255'''
         self.entry7.delete('0', 'end')
         self.entry7.insert('0', self._text_)
         self.entry7.place(anchor='nw', relwidth='.06', x='160', y='220')
         self.entry8 = ttk.Entry(self.frame1)
-        self.upper_green = tk.IntVar(value=225)
-        self.entry8.configure(textvariable=self.upper_green)
+        self.upper_saturation = tk.IntVar(value=225)
+        self.entry8.configure(textvariable=self.upper_saturation)
         self._text_ = '''255'''
         self.entry8.delete('0', 'end')
         self.entry8.insert('0', self._text_)
         self.entry8.place(anchor='nw', relwidth='.06', x='185', y='220')
         self.entry9 = ttk.Entry(self.frame1)
-        self.upper_blue = tk.IntVar(value=225)
-        self.entry9.configure(textvariable=self.upper_blue)
+        self.upper_value = tk.IntVar(value=225)
+        self.entry9.configure(textvariable=self.upper_value)
         self._text_ = '''255'''
         self.entry9.delete('0', 'end')
         self.entry9.insert('0', self._text_)
@@ -127,7 +135,7 @@ class WebcamguiApp:
         self.button2 = ttk.Button(self.frame1)
         self.button2.configure(text='Calibrate')
         self.button2.place(anchor='nw', relwidth='0.25', x='262', y='207')
-        self.button2.configure(command=self.calibrateRGBBounds)
+        self.button2.configure(command=self.calibrateHSVBounds)
         self.button3 = ttk.Button(self.frame1)
         self.button3.configure(text='Website')
         self.button3.place(anchor='nw', relwidth='0.3', x='246', y='15')
@@ -150,19 +158,32 @@ class WebcamguiApp:
 
     def detectResolution(self):
         #get screen geometry
-        root.attributes('-fullscreen', True)
-        root.state('iconic')
-        geometry = root.winfo_geometry()
-        root.state('normal')
-        root.attributes('-fullscreen', False)
+        self.root.attributes('-fullscreen', True)
+        self.root.state('iconic')
+        geometry = self.root.winfo_geometry()
+        self.root.state('normal')
+        self.root.attributes('-fullscreen', False)
 
         resolutions = re.findall(r"[0-9]+", geometry)
         
         self.resolution_width.set(resolutions[0])
         self.resolution_height.set(resolutions[1])
 
-    def calibrateRGBBounds(self):
-        pass
+    def calibrateHSVBounds(self):
+        #gets rid of gui and starts calibration menu with settings
+        #the calibration menu does not like the main menu still being open
+        self.root.destroy()
+
+        hand_calibration = CalibrateDetection(self.use_ip_webcam.get(),self.webcam_ip.get())
+
+        hand_calibration.initalCalibration()   
+        hand_calibration.loadGUI()
+        #starts gui     
+        hand_calibration.root.mainloop()
+
+        #reopens main menu gui and runs it
+        self.__init__()
+        self.run()  
 
     def websiteLink(self):
         pass
@@ -182,12 +203,12 @@ class WebcamguiApp:
             self.resolution_width.set(config.get("Screen Resolution", "resolution_width"))
             self.resolution_height.set(config.get("Screen Resolution", "resolution_height"))
 
-            self.lower_red.set(config.get("Calibration", "lower_red"))
-            self.lower_green.set(config.get("Calibration", "lower_green"))
-            self.lower_blue.set(config.get("Calibration", "lower_blue"))
-            self.upper_red.set(config.get("Calibration", "upper_red"))
-            self.upper_green.set(config.get("Calibration", "upper_green"))
-            self.upper_blue.set(config.get("Calibration", "upper_blue"))
+            self.lower_hue.set(config.get("Calibration", "lower_hue"))
+            self.lower_saturation.set(config.get("Calibration", "lower_saturation"))
+            self.lower_value.set(config.get("Calibration", "lower_value"))
+            self.upper_hue.set(config.get("Calibration", "upper_hue"))
+            self.upper_saturation.set(config.get("Calibration", "upper_saturation"))
+            self.upper_value.set(config.get("Calibration", "upper_value"))
 
             self.is_debug.set(config.get("Debug", "is_debug"))    
 
@@ -205,12 +226,12 @@ class WebcamguiApp:
         config.set("Screen Resolution", "resolution_height", str(self.resolution_height.get()))
 
         config.add_section("Calibration")
-        config.set("Calibration", "lower_red", str(self.lower_red.get()))
-        config.set("Calibration", "lower_green", str(self.lower_green.get()))
-        config.set("Calibration", "lower_blue", str(self.lower_blue.get()))
-        config.set("Calibration", "upper_red", str(self.upper_red.get()))
-        config.set("Calibration", "upper_green", str(self.upper_green.get()))
-        config.set("Calibration", "upper_blue", str(self.upper_blue.get()))
+        config.set("Calibration", "lower_hue", str(self.lower_hue.get()))
+        config.set("Calibration", "lower_saturation", str(self.lower_saturation.get()))
+        config.set("Calibration", "lower_value", str(self.lower_value.get()))
+        config.set("Calibration", "upper_hue", str(self.upper_hue.get()))
+        config.set("Calibration", "upper_saturation", str(self.upper_saturation.get()))
+        config.set("Calibration", "upper_value", str(self.upper_value.get()))
 
         config.add_section("Debug")
         config.set("Debug", "is_debug", str(self.is_debug.get()))
@@ -219,20 +240,21 @@ class WebcamguiApp:
             config.write(configfile)
 
     def start(self):
-        hand_detection = HandDetection(self.use_ip_webcam.get(), self.webcam_ip.get(), self.resolution_width.get(), self.resolution_height.get(), self.lower_red.get(), self.lower_green.get(), self.lower_blue.get(), self.upper_red.get(), self.upper_green.get(), self.upper_blue.get(), self.is_debug.get())
+        #gets rid of gui and starts cursor movement portion
+        self.root.destroy()
+
+        #uses inputs and starts the hand-cursor detection
+        hand_detection = HandDetection(self.use_ip_webcam.get(), self.webcam_ip.get(), self.resolution_width.get(), self.resolution_height.get(), self.lower_hue.get(), self.lower_saturation.get(), self.lower_value.get(), self.upper_hue.get(), self.upper_saturation.get(), self.upper_value.get(), self.is_debug.get())
         hand_detection.run()
+
+        #reopens main menu gui and runs it
+        self.__init__()
+        self.run()
 
     def run(self):
         self.mainwindow.mainloop()
 
 if __name__ == '__main__':
-    import tkinter as tk
-    root = tk.Tk()
-
-    cur_path = os.path.dirname(os.path.abspath(__file__))
-    root.iconbitmap(cur_path + '\\hand_icon.ico')
-    root.title("Webcam Hand Control")
-
-    app = WebcamguiApp(root)
+    app = WebcamguiApp()
     app.run()
 
