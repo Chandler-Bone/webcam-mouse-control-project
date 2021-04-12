@@ -1,0 +1,330 @@
+<?xml version='1.0' encoding='utf-8'?>
+<interface version="1.1">
+  <object class="ttk.Frame" id="frame1">
+    <property name="height">200</property>
+    <property name="width">200</property>
+    <layout manager="pack">
+      <property name="propagate">True</property>
+      <property name="side">top</property>
+    </layout>
+    <child>
+      <object class="tk.Canvas" id="canvas1">
+        <property name="height">275</property>
+        <property name="width">300</property>
+        <layout manager="pack">
+          <property name="propagate">True</property>
+          <property name="side">top</property>
+        </layout>
+      </object>
+    </child>
+    <child>
+      <object class="ttk.Scale" id="scale1">
+        <property name="command" type="command" cbtype="scale">updateHSV</property>
+        <property name="from_">0</property>
+        <property name="orient">horizontal</property>
+        <property name="to">255</property>
+        <property name="variable">int:upper_hue</property>
+        <layout manager="place">
+          <property name="anchor">nw</property>
+          <property name="relwidth">.62</property>
+          <property name="x">15</property>
+          <property name="y">40</property>
+        </layout>
+      </object>
+    </child>
+    <child>
+      <object class="ttk.Entry" id="entry1">
+        <property name="justify">center</property>
+        <property name="text" translatable="yes">255</property>
+        <property name="textvariable">int:upper_hue</property>
+        <layout manager="place">
+          <property name="anchor">nw</property>
+          <property name="relwidth">.075</property>
+          <property name="x">215</property>
+          <property name="y">40</property>
+        </layout>
+      </object>
+    </child>
+    <child>
+      <object class="ttk.Label" id="label1">
+        <property name="text" translatable="yes">Upper</property>
+        <layout manager="place">
+          <property name="anchor">nw</property>
+          <property name="x">250</property>
+          <property name="y">40</property>
+        </layout>
+      </object>
+    </child>
+    <child>
+      <object class="ttk.Label" id="label2">
+        <property name="text" translatable="yes">_____</property>
+        <layout manager="place">
+          <property name="anchor">nw</property>
+          <property name="x">15</property>
+          <property name="y">17</property>
+        </layout>
+      </object>
+    </child>
+    <child>
+      <object class="ttk.Label" id="label3">
+        <property name="text" translatable="yes">Hue</property>
+        <layout manager="place">
+          <property name="anchor">nw</property>
+          <property name="x">15</property>
+          <property name="y">13</property>
+        </layout>
+      </object>
+    </child>
+    <child>
+      <object class="ttk.Scale" id="scale2">
+        <property name="command" type="command" cbtype="scale">updateHSV</property>
+        <property name="from_">0</property>
+        <property name="orient">horizontal</property>
+        <property name="to">255</property>
+        <property name="variable">int:lower_hue</property>
+        <layout manager="place">
+          <property name="anchor">nw</property>
+          <property name="relwidth">.62</property>
+          <property name="x">15</property>
+          <property name="y">62</property>
+        </layout>
+      </object>
+    </child>
+    <child>
+      <object class="ttk.Entry" id="entry3">
+        <property name="justify">center</property>
+        <property name="text" translatable="yes">0</property>
+        <property name="textvariable">int:lower_hue</property>
+        <layout manager="place">
+          <property name="anchor">nw</property>
+          <property name="relwidth">.075</property>
+          <property name="x">215</property>
+          <property name="y">62</property>
+        </layout>
+      </object>
+    </child>
+    <child>
+      <object class="ttk.Label" id="label4">
+        <property name="text" translatable="yes">Lower</property>
+        <layout manager="place">
+          <property name="anchor">nw</property>
+          <property name="x">250</property>
+          <property name="y">62</property>
+        </layout>
+      </object>
+    </child>
+    <child>
+      <object class="ttk.Label" id="label5">
+        <property name="text" translatable="yes">___________</property>
+        <layout manager="place">
+          <property name="anchor">nw</property>
+          <property name="x">15</property>
+          <property name="y">89</property>
+        </layout>
+      </object>
+    </child>
+    <child>
+      <object class="ttk.Label" id="label6">
+        <property name="text" translatable="yes">Saturation</property>
+        <layout manager="place">
+          <property name="anchor">nw</property>
+          <property name="x">15</property>
+          <property name="y">85</property>
+        </layout>
+      </object>
+    </child>
+    <child>
+      <object class="ttk.Scale" id="scale3">
+        <property name="command" type="command" cbtype="scale">updateHSV</property>
+        <property name="from_">0</property>
+        <property name="orient">horizontal</property>
+        <property name="to">255</property>
+        <property name="variable">int:upper_saturation</property>
+        <layout manager="place">
+          <property name="anchor">nw</property>
+          <property name="relwidth">.62</property>
+          <property name="x">15</property>
+          <property name="y">112</property>
+        </layout>
+      </object>
+    </child>
+    <child>
+      <object class="ttk.Scale" id="scale4">
+        <property name="command" type="command" cbtype="scale">updateHSV</property>
+        <property name="from_">0</property>
+        <property name="orient">horizontal</property>
+        <property name="to">255</property>
+        <property name="variable">int:lower_saturation</property>
+        <layout manager="place">
+          <property name="anchor">nw</property>
+          <property name="relwidth">.62</property>
+          <property name="x">15</property>
+          <property name="y">134</property>
+        </layout>
+      </object>
+    </child>
+    <child>
+      <object class="ttk.Entry" id="entry4">
+        <property name="justify">center</property>
+        <property name="text" translatable="yes">255</property>
+        <property name="textvariable">int:upper_saturation</property>
+        <layout manager="place">
+          <property name="anchor">nw</property>
+          <property name="relwidth">.075</property>
+          <property name="x">215</property>
+          <property name="y">112</property>
+        </layout>
+      </object>
+    </child>
+    <child>
+      <object class="ttk.Entry" id="entry5">
+        <property name="justify">center</property>
+        <property name="text" translatable="yes">0</property>
+        <property name="textvariable">int:lower_saturation</property>
+        <layout manager="place">
+          <property name="anchor">nw</property>
+          <property name="relwidth">.075</property>
+          <property name="x">215</property>
+          <property name="y">134</property>
+        </layout>
+      </object>
+    </child>
+    <child>
+      <object class="ttk.Label" id="label7">
+        <property name="text" translatable="yes">Upper</property>
+        <layout manager="place">
+          <property name="anchor">nw</property>
+          <property name="x">250</property>
+          <property name="y">112</property>
+        </layout>
+      </object>
+    </child>
+    <child>
+      <object class="ttk.Label" id="label8">
+        <property name="text" translatable="yes">Lower</property>
+        <layout manager="place">
+          <property name="anchor">nw</property>
+          <property name="x">250</property>
+          <property name="y">134</property>
+        </layout>
+      </object>
+    </child>
+    <child>
+      <object class="ttk.Label" id="label9">
+        <property name="text" translatable="yes">______</property>
+        <layout manager="place">
+          <property name="anchor">nw</property>
+          <property name="x">15</property>
+          <property name="y">161</property>
+        </layout>
+      </object>
+    </child>
+    <child>
+      <object class="ttk.Label" id="label10">
+        <property name="text" translatable="yes">Value</property>
+        <layout manager="place">
+          <property name="anchor">nw</property>
+          <property name="x">15</property>
+          <property name="y">158</property>
+        </layout>
+      </object>
+    </child>
+    <child>
+      <object class="ttk.Scale" id="scale5">
+        <property name="command" type="command" cbtype="scale">updateHSV</property>
+        <property name="from_">0</property>
+        <property name="orient">horizontal</property>
+        <property name="to">255</property>
+        <property name="variable">int:upper_value</property>
+        <layout manager="place">
+          <property name="anchor">nw</property>
+          <property name="relwidth">.62</property>
+          <property name="x">15</property>
+          <property name="y">184</property>
+        </layout>
+      </object>
+    </child>
+    <child>
+      <object class="ttk.Scale" id="scale6">
+        <property name="command" type="command" cbtype="scale">updateHSV</property>
+        <property name="from_">0</property>
+        <property name="orient">horizontal</property>
+        <property name="to">255</property>
+        <property name="variable">int:lower_value</property>
+        <layout manager="place">
+          <property name="anchor">nw</property>
+          <property name="relwidth">.62</property>
+          <property name="x">15</property>
+          <property name="y">206</property>
+        </layout>
+      </object>
+    </child>
+    <child>
+      <object class="ttk.Entry" id="entry6">
+        <property name="justify">center</property>
+        <property name="text" translatable="yes">255</property>
+        <property name="textvariable">int:upper_value</property>
+        <layout manager="place">
+          <property name="anchor">nw</property>
+          <property name="relwidth">.075</property>
+          <property name="x">215</property>
+          <property name="y">184</property>
+        </layout>
+      </object>
+    </child>
+    <child>
+      <object class="ttk.Entry" id="entry7">
+        <property name="justify">center</property>
+        <property name="text" translatable="yes">0</property>
+        <property name="textvariable">int:lower_value</property>
+        <layout manager="place">
+          <property name="anchor">nw</property>
+          <property name="relwidth">.075</property>
+          <property name="x">215</property>
+          <property name="y">206</property>
+        </layout>
+      </object>
+    </child>
+    <child>
+      <object class="ttk.Label" id="label11">
+        <property name="text" translatable="yes">Upper</property>
+        <layout manager="place">
+          <property name="anchor">nw</property>
+          <property name="x">250</property>
+          <property name="y">184</property>
+        </layout>
+      </object>
+    </child>
+    <child>
+      <object class="ttk.Label" id="label12">
+        <property name="text" translatable="yes">Lower</property>
+        <layout manager="place">
+          <property name="anchor">nw</property>
+          <property name="x">250</property>
+          <property name="y">206</property>
+        </layout>
+      </object>
+    </child>
+    <child>
+      <object class="ttk.Button" id="button1">
+        <property name="text" translatable="yes">Save &amp; Exit</property>
+        <layout manager="place">
+          <property name="anchor">nw</property>
+          <property name="relwidth">0.61</property>
+          <property name="x">100</property>
+          <property name="y">238</property>
+        </layout>
+      </object>
+    </child>
+    <child>
+      <object class="ttk.Button" id="button2">
+        <property name="text" translatable="yes">Exit</property>
+        <layout manager="place">
+          <property name="anchor">nw</property>
+          <property name="x">15</property>
+          <property name="y">238</property>
+        </layout>
+      </object>
+    </child>
+  </object>
+</interface>
