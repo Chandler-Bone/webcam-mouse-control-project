@@ -10,24 +10,21 @@ from PIL import Image, ImageTk
 
 class CalibrateDetection:
 
-    use_ip_webcam = 0
     webcam_ip = ""
-    lower_skin = np.array([120, 20, 80])
-    upper_skin = np.array([150, 255, 230])
+    lower_skin = np.array([255, 255, 255])
+    upper_skin = np.array([0, 0, 0])
     is_debug = 0
-
     IMAGE_DIMENSIONS = 852, 480
 
     def __init__(self, use_ip_webcam, webcam_ip):
 
         # change the webcam_ip to 0 if you are using a webcame connected to pc
         # constructor
-        self.use_ip_webcam = use_ip_webcam
         self.webcam_ip = webcam_ip
         if use_ip_webcam == 1:
-            self.cap = cv.VideoCapture(self.webcam_ip)
+            self.cap = cv.VideoCapture(self.webcam_ip) #ip webcam connect
         else:
-            self.cap = cv.VideoCapture(0)
+            self.cap = cv.VideoCapture(0) #integrated webcam connect
 
     def loadGUI(self):
         # building GUI
@@ -173,7 +170,7 @@ class CalibrateDetection:
         _, img = self.cap.read()
         img = cv.resize(img, self.IMAGE_DIMENSIONS)
         img = cv.flip(img, 1)
-        img = cv.blur(img, (5, 5))
+        img = cv.GaussianBlur(img, (5, 5), 0)
 
         # converts image bgr -> hsv and removes colors that are not in range
         hsv = cv.cvtColor(img, cv.COLOR_BGR2HSV)
@@ -181,6 +178,7 @@ class CalibrateDetection:
         mask = cv.bitwise_not(mask)
         res = cv.bitwise_and(img, img, mask=mask)
 
+        #puts image into tk window
         cvimage = cv.cvtColor(res, cv.COLOR_BGR2RGBA)
         self.current_image = Image.fromarray(cvimage)
         imgtk = ImageTk.PhotoImage(image=self.current_image)
@@ -217,6 +215,7 @@ class CalibrateDetection:
         )
 
     def saveExit(self):
+        #saves calibration values on save & exit
         config = ConfigParser()
         file = "config.ini"
         config.read(file)

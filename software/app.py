@@ -5,6 +5,8 @@ import tkinter.ttk as ttk
 from tkinter.constants import END
 from configparser import ConfigParser
 import logging
+import webbrowser
+
 
 from calibrate_detection import CalibrateDetection
 from hand_detection import HandDetection
@@ -206,7 +208,7 @@ class WebcamguiApp:
         self.run()
 
     def websiteLink(self):
-        pass
+        webbrowser.open("https://github.com/ChandlerBoneGSU/SE-Project-Team1")
 
     def loadSettings(self):
         config = ConfigParser()
