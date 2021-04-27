@@ -6,7 +6,7 @@ from tkinter.constants import END
 from configparser import ConfigParser
 import logging
 import webbrowser
-
+import sys
 
 from calibrate_detection import CalibrateDetection
 from hand_detection import HandDetection
@@ -16,12 +16,20 @@ class WebcamguiApp:
     def __init__(self, master=None):
 
         self.root = tk.Tk()
-        cur_path = os.path.dirname(os.path.abspath(__file__))
-        self.root.iconbitmap(cur_path + "\\hand_icon.ico")
+
+        #add icon to window
+        icon = "hand_icon.ico" 
+        if not hasattr(sys, "frozen"):
+            icon = os.path.join(os.path.dirname(__file__), icon) 
+        else:  
+            icon = os.path.join(sys.prefix, icon)
+        self.root.iconbitmap(default=icon)
+
+        #rename window and make window not resizable
         self.root.title("Webcam Hand Control")
         self.root.resizable(False, False)
 
-        # this was UI was built using pygubu and i recommend ignoring this garbage
+        # this was UI was built using pygubu and i recommend ignoring this
         self.frame1 = ttk.Frame(master)
         self.canvas = tk.Canvas(self.frame1)
         self.canvas.configure(height="300")
@@ -190,6 +198,7 @@ class WebcamguiApp:
         self.resolution_height.set(resolutions[1])
 
     def calibrateHSVBounds(self):
+        self.saveSettings()
         # gets rid of gui and starts calibration menu with settings
         # the calibration menu does not like the main menu still being open
         self.root.destroy()

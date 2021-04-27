@@ -2,6 +2,7 @@ import os
 import tkinter as tk
 import tkinter.ttk as ttk
 from configparser import ConfigParser
+import sys
 
 import cv2 as cv
 import numpy as np
@@ -29,11 +30,19 @@ class CalibrateDetection:
     def loadGUI(self):
         # building GUI
         self.root = tk.Tk()
-        cur_path = os.path.dirname(os.path.abspath(__file__))
-        self.root.iconbitmap(cur_path + "\\hand_icon.ico")
+
+        #add icon to window
+        icon = "hand_icon.ico" 
+        if not hasattr(sys, "frozen"):
+            icon = os.path.join(os.path.dirname(__file__), icon) 
+        else:  
+            icon = os.path.join(sys.prefix, icon)
+        self.root.iconbitmap(default=icon)
+
         self.root.title("Calibration Menu")
         self.root.resizable(False, False)
 
+        # this was UI was built using pygubu and i recommend ignoring this
         self.frame1 = ttk.Frame(self.root)
         self.canvas1 = tk.Canvas(self.frame1)
         self.canvas1.configure(height="480", width="1127")
@@ -300,7 +309,7 @@ class CalibrateDetection:
                 (20, 20),
                 cv.FONT_HERSHEY_PLAIN,
                 1.25,
-                (0, 0, 255),
+                (255, 100, 0),
                 1,
                 cv.LINE_AA,
             )

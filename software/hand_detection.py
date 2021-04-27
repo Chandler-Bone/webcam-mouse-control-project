@@ -203,7 +203,7 @@ class HandDetection:
                     cv.putText(
                         res,
                         f"Finger Openings: {round(finger_count_avg)}",
-                        (50, 50),
+                        (50, 55),
                         cv.FONT_HERSHEY_SIMPLEX,
                         0.5,
                         (0, 200, 200),
@@ -214,7 +214,7 @@ class HandDetection:
                     cv.putText(
                         res,
                         "No Open Fingers",
-                        (50, 50),
+                        (50, 55),
                         cv.FONT_HERSHEY_SIMPLEX,
                         0.5,
                         (0, 200, 200),
@@ -226,9 +226,32 @@ class HandDetection:
                 # if there is no object on the screen
                 pass
 
+            cv.putText(
+                        res,
+                        "Press \'f\' to exit the program",
+                        (50, 15),
+                        cv.FONT_HERSHEY_SIMPLEX,
+                        0.5,
+                        (0, 200, 200),
+                        1,
+                        cv.LINE_AA,
+                    )
+            cv.putText(
+                        res,
+                        "2 fingers = move mouse | 3 fingers = left click | 5 fingers = right click",
+                        (50, 35),
+                        cv.FONT_HERSHEY_SIMPLEX,
+                        0.5,
+                        (0, 200, 200),
+                        1,
+                        cv.LINE_AA,
+                    )        
+
             # cv.imshow('Image', img)
-            cv.imshow("Debug", res)
-            cv.imshow("Black/White", res_bw)
+            if(self.is_debug):
+                cv.imshow("Black/White", res_bw)
+            cv.imshow("Webcam Mouse Control", res)
+            
 
             # press key to stop program
             if cv.waitKey(1) & 0xFF == ord("f"):
