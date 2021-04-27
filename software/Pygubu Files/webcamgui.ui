@@ -49,8 +49,7 @@
         <property name="textvariable">string:webcam_ip</property>
         <layout manager="place">
           <property name="anchor">nw</property>
-          <property name="relwidth">0.6</property>
-          <property name="relx">0.0</property>
+          <property name="width">230</property>
           <property name="x">120</property>
           <property name="y">70</property>
         </layout>
@@ -131,7 +130,7 @@
         <property name="validate">none</property>
         <layout manager="place">
           <property name="anchor">nw</property>
-          <property name="relwidth">0.16</property>
+          <property name="width">60</property>
           <property name="x">20</property>
           <property name="y">146</property>
         </layout>
@@ -143,7 +142,7 @@
         <property name="textvariable">int:resolutionHeight</property>
         <layout manager="place">
           <property name="anchor">nw</property>
-          <property name="relwidth">.16</property>
+          <property name="width">60</property>
           <property name="x">105</property>
           <property name="y">146</property>
         </layout>
@@ -191,7 +190,7 @@
         <property name="textvariable">int:lower_red</property>
         <layout manager="place">
           <property name="anchor">nw</property>
-          <property name="relwidth">.06</property>
+          <property name="width">24</property>
           <property name="x">35</property>
           <property name="y">220</property>
         </layout>
@@ -223,7 +222,7 @@
         <property name="textvariable">int:lower_green</property>
         <layout manager="place">
           <property name="anchor">nw</property>
-          <property name="relwidth">.06</property>
+          <property name="width">24</property>
           <property name="x">60</property>
           <property name="y">220</property>
         </layout>
@@ -235,14 +234,14 @@
         <property name="textvariable">int:lower_blue</property>
         <layout manager="place">
           <property name="anchor">nw</property>
-          <property name="relwidth">.06</property>
+          <property name="width">24</property>
           <property name="x">85</property>
           <property name="y">220</property>
         </layout>
       </object>
     </child>
     <child>
-      <object class="ttk.Label" id="label9">
+      <object class="ttk.Label" id="label10">
         <property name="text" translatable="yes">-</property>
         <layout manager="place">
           <property name="anchor">nw</property>
@@ -252,7 +251,7 @@
       </object>
     </child>
     <child>
-      <object class="ttk.Label" id="label10">
+      <object class="ttk.Label" id="label11">
         <property name="text" translatable="yes">Upper RGB Bounds</property>
         <layout manager="place">
           <property name="anchor">nw</property>
@@ -267,7 +266,7 @@
         <property name="textvariable">int:upper_red</property>
         <layout manager="place">
           <property name="anchor">nw</property>
-          <property name="relwidth">.06</property>
+          <property name="width">24</property>
           <property name="x">160</property>
           <property name="y">220</property>
         </layout>
@@ -279,7 +278,7 @@
         <property name="textvariable">int:upper_green</property>
         <layout manager="place">
           <property name="anchor">nw</property>
-          <property name="relwidth">.06</property>
+          <property name="width">24</property>
           <property name="x">185</property>
           <property name="y">220</property>
         </layout>
@@ -291,7 +290,7 @@
         <property name="textvariable">int:upper_blue</property>
         <layout manager="place">
           <property name="anchor">nw</property>
-          <property name="relwidth">.06</property>
+          <property name="width">24</property>
           <property name="x">210</property>
           <property name="y">220</property>
         </layout>
