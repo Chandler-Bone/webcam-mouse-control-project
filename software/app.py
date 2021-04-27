@@ -33,6 +33,7 @@ class WebcamguiApp:
         self.frame1 = ttk.Frame(master)
         self.canvas = tk.Canvas(self.frame1)
         self.canvas.configure(height="300")
+        self.canvas.configure(width="375")
         self.canvas.pack(side="top")
         self.checkbutton1 = ttk.Checkbutton(self.frame1)
         self.use_ip_webcam = tk.IntVar(value=0)
