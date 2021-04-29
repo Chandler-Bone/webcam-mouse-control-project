@@ -1,0 +1,1 @@
+pyinstaller -w -F -i "hand_icon.ico" -n "Webcam Mouse Controller" --add-data "hand_icon.ico;." app.py

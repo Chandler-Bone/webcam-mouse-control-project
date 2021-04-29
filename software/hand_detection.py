@@ -1,6 +1,7 @@
 import logging
 import queue
 import sys
+import tkinter.messagebox
 from tkinter.constants import END
 
 import cv2 as cv
@@ -37,7 +38,16 @@ class HandDetection:
         if use_ip_webcam:
             self.cap = cv.VideoCapture(self.webcam_ip) #ip webcam connect
         else:
-            self.cap = cv.VideoCapture(0) #integrated webcam connect
+            try:
+                self.cap = cv.VideoCapture(0) #integrated webcam connect
+            except: 
+                tkinter.messagebox.showerror('Error', 'Your webcam was not detected.')
+                sys.exit(1)
+
+        #if webcam is not detected
+        if self.cap is None or not self.cap.isOpened():
+            tkinter.messagebox.showerror('Error', 'Your webcam was not detected.')
+            sys.exit(1)
 
         self.resolution_width = resolution_width
         self.resolution_height = resolution_height

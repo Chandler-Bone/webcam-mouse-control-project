@@ -47,7 +47,7 @@ class WebcamguiApp:
             cursor="arrow",
             offvalue=1,
             onvalue=0,
-            text="Integrated Webcam (Recommended)",
+            text="Integrated Webcam (Not Recommended)",
         )
         self.checkbutton2.configure(variable=self.use_ip_webcam)
         self.checkbutton2.place(anchor="nw", x="15", y="45")

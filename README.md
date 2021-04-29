@@ -1,2 +1,4 @@
 # SE-Project-Team1
-Webcam mouse controller.
+Webcam Mouse Controller
+
+Demo: https://youtu.be/ZbKEtAhrCZA

@@ -2,6 +2,7 @@ import os
 import tkinter as tk
 import tkinter.ttk as ttk
 from configparser import ConfigParser
+import tkinter.messagebox
 import sys
 
 import cv2 as cv
@@ -22,10 +23,15 @@ class CalibrateDetection:
         # change the webcam_ip to 0 if you are using a webcame connected to pc
         # constructor
         self.webcam_ip = webcam_ip
-        if use_ip_webcam == 1:
+        if use_ip_webcam:
             self.cap = cv.VideoCapture(self.webcam_ip) #ip webcam connect
         else:
             self.cap = cv.VideoCapture(0) #integrated webcam connect
+
+        #if webcam is not detected
+        if self.cap is None or not self.cap.isOpened():
+            tkinter.messagebox.showerror('Error', 'Your webcam was not detected.')
+            sys.exit(1)
 
     def loadGUI(self):
         # building GUI
@@ -264,15 +270,14 @@ class CalibrateDetection:
                 self.lower_skin = np.array([colors[0] - 15, 20, 80])
                 self.upper_skin = np.array([colors[0] + 15, 255, 230])
 
-        # initializing capture window
-        cap = cv.VideoCapture(self.webcam_ip)
+            
         cv.namedWindow("Calibration Menu")
         cv.setMouseCallback("Calibration Menu", selectRGBValue)
 
         while True:
 
             # reads and resizes image
-            _, img = cap.read()
+            _, img = self.cap.read()
             img = cv.resize(img, self.IMAGE_DIMENSIONS)
             img = cv.flip(img, 1)
             img = cv.blur(img, (5, 5))
