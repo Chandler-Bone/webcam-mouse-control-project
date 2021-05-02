@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Submit Ticket</title>
+<link rel="stylesheet" href="submitticket.css">
+</head>
+<body>
+
+<form name="contactForm" onsubmit="return validateForm()"  method="post">
+    <h2>Submit Your Ticket</h2>
+    <div class="row">
+        <label>Full Name: </label>
+        <input type="text" name="Name">
+        <div class="error" id="NameErr"></div>
+    </div>
+
+    <div class="row">
+        <label>Email Address: </label>
+        <input type="text" name="Email">
+        <div class="error" id="EmailErr"></div>
+    </div>
+
+    <div class="row">
+        <label>Topic: </label>
+        <input type="text" name="Topic">
+        <div class="error" id="TopicErr"></div>
+    </div>
+    
+    <div class="row">
+        <label>Description: </label>
+        <textarea id="Description" name="Description" rows="4" cols="35"></textarea> 
+        <div class="error" id="DescriptionErr"></div>
+    </div>
+   
+    <div class="row">
+        <input type="submit" value="Submit">
+    </div>
+</form>
+
+<script>
+// Defining a function to display error message
+function printError(elemId, hintMsg) {
+    document.getElementById(elemId).innerHTML = hintMsg;
+}
+
+// Defining a function to validate form 
+function validateForm() {
+    // Retrieving the values of form elements 
+    var Name = document.contactForm.Name.value;
+    var Email = document.contactForm.Email.value;
+    var Topic = document.contactForm.Topic.value;
+    var Description = document.contactForm.Description.value;;
+    
+    // Defining error variables with a default value
+    var NameErr = EmailErr = TopicErr = DescriptionErr = true;
+    
+    // Validate name
+    if(Name == "" || Name == null) {
+        printError("NameErr", "Please enter your name");
+    } else {
+        var regex = /^[a-zA-Z\s]+$/;                
+        if(regex.test(Name) === false) {
+            printError("NameErr", "Please enter a valid name");
+        } else {
+            printError("NameErr", "");
+            NameErr = false;
+        }
+    }
+    
+    // Validate email address
+    if(Email == "" || Email == null) {
+        printError("EmailErr", "Please enter your email address");
+    } else {
+        // Regular expression for basic email validation
+        var regex = /^\S+@\S+\.\S+$/;
+        if(regex.test(Email) === false) {
+            printError("EmailErr", "Please enter a valid email address");
+        } else{
+            printError("EmailErr", "");
+            EmailErr = false;
+        }
+    }
+    
+    // Validate topic problem
+     if(Topic == "" || Topic == null) {
+        printError("TopicErr", "Please enter the topic of your problem");
+    } else {
+        var regex = /^[a-zA-Z\s]+$/;                
+        if(regex.test(Topic) === false) {
+            printError("TopicErr", "Please enter a valid topic");
+        } else {
+            printError("TopicErr", "");
+            TopicErr = false;
+        }
+    }
+
+     // Validate description
+     if(Description == "" || Description == null) {
+        printError("DescriptionErr", "Please enter the description of the problem");
+    } else {
+        var regex = /^[ A-Za-z0-9'./,&+-]*$/  ;             
+        if(regex.test(Description) === false) {
+            printError("DescriptionErr", "Please enter a valid description");
+        } else {
+            printError("DescriptionErr", "");
+            DescriptionErr = false;
+        }
+    }
+    
+    
+    // Prevent the form from being submitted if there are any errors
+    if((NameErr || EmailErr || TopicErr || DescriptionErr ) == true) {
+       return false;
+    } else {
+        // Creating a string from input data for preview
+        var dataPreview = "Thank you, " + Name + " !" + "\n" + "Your ticket has been sucessfully submitted. One of our team members will get back to you as soon as possible!"                           
+        // Display input data in a dialog box before submitting the form
+        alert(dataPreview);
+    }
+};
+</script>
+</body>
+</html>                            

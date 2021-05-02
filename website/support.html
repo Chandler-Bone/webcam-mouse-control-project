@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<title>Testing </title>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+   <img src="mouse.png"> &nbsp;&nbsp;&nbsp;
+        <img src="contactless.png">
+  <!-- <a class="navbar-brand" href="#">Cursor movement</a> -->
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item">
+        <a href="index.html" class="nav-link" >Home </a>
+      </li>
+      <li class="nav-item">
+        <a href="demo.html" class="nav-link" >Download</a>
+      </li>
+
+       <li class="nav-item">
+        <a href="pricing.html" class="nav-link" >Pricing</a>
+      </li>
+      
+      <li class="nav-item">
+        <a href="feedback.html" class="nav-link" >Feedback</a>
+      </li>
+
+       <li class="nav-item">
+        <a href="about.html" class="nav-link" >About</a>
+      </li>
+
+      <li class="nav-item active">
+        <a href="support.html" class="nav-link" >Support <span class="sr-only"></span></a>
+      </li>
+
+    </ul>
+    <!--       <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Dropdown
+        </a> -->
+
+<!--         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" href="#">Action</a>
+          <a class="dropdown-item" href="#">Another action</a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="#">Something else here</a>
+        </div> --> 
+<!--     <form class="form-inline my-2 my-lg-0">
+      <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+    </form> -->
+  </div>
+</nav>
+<div class="ticket">
+	<a class="submitticket"  href="SubmitTicket.html">Submit Ticket</a>
+</div>
+
+<h2>How can we be of an assistant today? </h2>
+
+<form class="example" action="/action_page.php">
+  <input type="text" placeholder="Search.." name="search">
+  <button type="submit"><i class="fa fa-search"></i></button>
+</form>
+<br>
+<br>
+
+<h2>Frequently Asked Questions(FAQ)</h2>
+<button class="accordion">How do I calibrate the software to my skin tone?</button>
+<div class="panel">
+  <br>
+  <p>Launch the software, click on the calibration button. It takes you to the calibration menu, there configure the calibration settings and save the setting within the calibration menu.</p>
+</div>
+
+<button class="accordion">How do I submit a ticket about the problem I am facing?</button>
+<div class="panel">
+  <br>
+  <p>Go to the Support tab, at the very right of it there's a link called submit ticket in blue and underlined. Click on the link, it should take you to the page for you to input your information. Enter your full name, email address, topic(the topic of your problem) and lastly descripe the problem you are facing. Click submit and that's it!</p>
+</div>
+
+<button class="accordion">How can I install the software?</button>
+<div class="panel">
+  <br>
+  <p>On our website, there's a tab called Download. Click on the download tab, there's be a link click on the link and the software is downloaded to your compatible device. </p>
+</div>
+
+<button class="accordion">For personal use do I have to pay?</button>
+<div class="panel">
+  <br>
+  <p>On our pricing tab we stated that our basic plan is for personal usage and it's free of cost.</p>
+</div>
+
+<button class="accordion">What devices are compatible with the software?</button>
+<div class="panel">
+  <br>
+  <p>This software is compatible with mac, linux and windows. It is not compatible with chromebooks or pixelbooks. 
+</p>
+</div>
+
+<button class="accordion">How can I submit feedback?</button>
+<div class="panel">
+  <br>
+  <p>On our website, there's a tab called feedback, click on the tab and input the required information needed to submit your feedback. After inputting in the required information, click the submit button. You then alerted that we've received your feedback and that you've successfully submited your feedback.</p>
+</div>
+
+<script>
+var acc = document.getElementsByClassName("accordion");
+var i;
+
+for (i = 0; i < acc.length; i++) {
+  acc[i].addEventListener("click", function() {
+    this.classList.toggle("active");
+    var panel = this.nextElementSibling;
+    if (panel.style.maxHeight) {
+      panel.style.maxHeight = null;
+    } else {
+      panel.style.maxHeight = panel.scrollHeight + "px";
+    } 
+  });
+}
+</script>
+</html>
